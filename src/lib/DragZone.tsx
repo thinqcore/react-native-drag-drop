@@ -32,7 +32,7 @@ interface DragZOneProps extends ContainerProps {
   zoneId: any;
   zone: any;
   onZoneLayoutChange: (zoneId: any, layout: LayoutProps) => any;
-  renderItem: (item: any) => ReactElement;
+  renderItem: (item: any, index: number) => ReactElement;
   renderZone: (
     zone: any,
     children?: ReactElement,
@@ -40,6 +40,7 @@ interface DragZOneProps extends ContainerProps {
   ) => ReactElement;
   itemsDisplay?: Display;
   numCollumns?: number;
+  listZonesIdApplyMulti?: number[];
 }
 class DragZOne extends Container<DragZOneProps, DragZOneState> {
   ref = React.createRef<View>();
@@ -60,8 +61,16 @@ class DragZOne extends Container<DragZOneProps, DragZOneState> {
       zoneId,
       itemsDisplay,
       numCollumns,
+      listZonesIdApplyMulti,
     } = this.props;
-
+    let _itemsDisplay = itemsDisplay;
+    if (
+      listZonesIdApplyMulti &&
+      listZonesIdApplyMulti.length > 0 &&
+      !listZonesIdApplyMulti.includes(zoneId)
+    ) {
+      _itemsDisplay = "collumn";
+    }
     if (!items || items.length === 0) return null;
     return (
       <ItemsContainer
@@ -70,7 +79,7 @@ class DragZOne extends Container<DragZOneProps, DragZOneState> {
         onGrant={onGrant}
         addedHeight={addedHeight}
         numCollumns={numCollumns}
-        itemsDisplay={itemsDisplay}
+        itemsDisplay={_itemsDisplay}
         changed={changed}
         draggedElementStyle={draggedElementStyle}
         itemsInZoneStyle={itemsInZoneStyle}

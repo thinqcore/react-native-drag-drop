@@ -37,8 +37,8 @@ interface DragAndDropProps extends ContainerProps {
   draggedElementStyle?: ViewStyle;
   headerComponent?: ReactElement;
   footerComponent?: ReactElement;
-  itemsContainerHeightFixe?: boolean;
-  renderItem: (item: any) => ReactElement;
+  itemsContainerHeightFixed?: boolean;
+  renderItem: (item: any, index: number) => ReactElement;
   itemsContainerStyle?: ViewStyle;
   zonesContainerStyle?: ViewStyle;
   renderZone: (
@@ -50,6 +50,7 @@ interface DragAndDropProps extends ContainerProps {
   itemsInZoneDisplay?: Display;
   itemsNumCollumns?: number;
   itemsInZoneNumCollumns?: number;
+  listZonesIdApplyMulti?: number[];
 }
 
 const PERCENT = 0.15;
@@ -67,7 +68,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
     addedHeight: 0,
     mounted: false,
   };
-  timeout: NodeJS.Timeout | null = null;
+  timeout: number | null = null;
   ref = React.createRef<ScrollView>();
   onDrag = (
     gesture: PanResponderGestureState,
@@ -276,7 +277,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
       renderZone,
       itemsContainerStyle,
       zonesContainerStyle,
-      itemsContainerHeightFixe = true,
+      itemsContainerHeightFixed = true,
       draggedElementStyle,
       contentContainerStyle,
       itemsInZoneStyle,
@@ -287,6 +288,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
       itemsInZoneDisplay,
       itemsInZoneNumCollumns,
       itemsNumCollumns,
+      listZonesIdApplyMulti,
     } = this.props;
     const { items, zones, dragging, itemsContainerLayout } = this.state;
     // if (this.state.changed) return <View style={style} />;
@@ -329,7 +331,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
           layout={itemsContainerLayout}
           onLayout={(layout) => this.setState({ itemsContainerLayout: layout })}
           onDragEnd={this.onDragEnd}
-          itemsContainerHeightFixe={itemsContainerHeightFixe}
+          itemsContainerHeightFixed={itemsContainerHeightFixed}
           onDrag={this.onDrag}
           items={items}
         />
@@ -355,6 +357,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
           renderItem={renderItem}
           onDragEnd={this.onDragEnd}
           onDrag={this.onDrag}
+          listZonesIdApplyMulti={listZonesIdApplyMulti}
         />
         {footerComponent}
       </ScrollView>

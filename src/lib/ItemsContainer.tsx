@@ -25,13 +25,13 @@ interface ItemsContainerProps extends ContainerProps {
   layout?: LayoutProps | null;
   style?: ViewStyle;
   dragging: boolean;
-  itemsContainerHeightFixe?: boolean;
+  itemsContainerHeightFixed?: boolean;
   itemKeyExtractor: (item: any) => number | string;
   itemsInZoneStyle?: ViewStyle;
   itemsContainerStyle?: ViewStyle;
   onLayout?: (layout: LayoutProps | null) => any;
   items: any[];
-  renderItem: (item: any) => ReactElement;
+  renderItem: (item: any, index: number) => ReactElement;
   itemsDisplay?: Display;
   numCollumns?: number;
 }
@@ -57,7 +57,7 @@ class ItemsContainer extends Container<
       onDragEnd,
       changed,
       onDrag,
-      itemsContainerHeightFixe,
+      itemsContainerHeightFixed,
       draggedElementStyle,
       itemsInZoneStyle,
       items,
@@ -69,7 +69,7 @@ class ItemsContainer extends Container<
     if (dragging) {
       newStyle.zIndex = 10000;
     }
-    if (itemsContainerHeightFixe) {
+    if (itemsContainerHeightFixed) {
       newStyle.width = layout?.width;
       newStyle.height = layout?.height;
     }
@@ -89,7 +89,7 @@ class ItemsContainer extends Container<
         }}
         style={[itemsContainerStyle, newStyle]}
       >
-        {items.map((item) => {
+        {items.map((item, index) => {
           const key = itemKeyExtractor(item);
           return (
             <DragItem
@@ -103,6 +103,7 @@ class ItemsContainer extends Container<
               onDragEnd={onDragEnd}
               item={item}
               renderItem={renderItem}
+              tabIndex={index}
             />
           );
         })}

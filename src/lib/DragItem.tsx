@@ -29,7 +29,8 @@ interface DragItemProps extends ContainerProps {
   style?: ViewStyle;
   itemsInZoneStyle?: ViewStyle;
   item: any;
-  renderItem: (item: any) => ReactElement;
+  renderItem: (item: any, index: number) => ReactElement;
+  tabIndex: number;
 }
 class DragItem extends Container<DragItemProps, DragItemState> {
   state: DragItemState = {
@@ -44,11 +45,12 @@ class DragItem extends Container<DragItemProps, DragItemState> {
       item,
       renderItem,
       onGrant,
+      tabIndex,
       addedHeight,
       itemsInZoneStyle,
       draggedElementStyle,
     } = this.props;
-    const child = renderItem(item);
+    const child = renderItem(item, tabIndex);
     const newChild = React.cloneElement(child, {
       style: {},
       ref: this.ref,

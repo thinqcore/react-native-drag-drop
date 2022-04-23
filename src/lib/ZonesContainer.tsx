@@ -30,12 +30,13 @@ interface ZonesContainerProps extends ContainerProps {
   zonesContainerStyle?: ViewStyle;
   onZoneLayoutChange: (zoneId: any, layout: LayoutProps) => any;
   zones: any[];
-  renderItem: (item: any) => ReactElement;
+  renderItem: (item: any, index: number) => ReactElement;
   renderZone: (
     zone: any,
     children?: ReactElement,
     hover?: boolean
   ) => ReactElement;
+  listZonesIdApplyMulti?: number[];
 }
 class ZonesContainer extends Container<
   ZonesContainerProps,
@@ -60,6 +61,7 @@ class ZonesContainer extends Container<
       addedHeight,
       itemsDisplay,
       numCollumns,
+      listZonesIdApplyMulti,
     } = this.props;
     return (
       <View style={zonesContainerStyle}>
@@ -83,6 +85,7 @@ class ZonesContainer extends Container<
               itemKeyExtractor={itemKeyExtractor}
               onDrag={onDrag}
               renderZone={renderZone}
+              listZonesIdApplyMulti={listZonesIdApplyMulti}
             />
           );
         })}
