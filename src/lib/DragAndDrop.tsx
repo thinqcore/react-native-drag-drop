@@ -51,6 +51,7 @@ interface DragAndDropProps extends ContainerProps {
   itemsNumCollumns?: number;
   itemsInZoneNumCollumns?: number;
   listZonesIdApplyMulti?: number[];
+  enableZoneItems?: boolean;
 }
 
 const PERCENT = 0.15;
@@ -203,11 +204,13 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
     let items = [...this.state.items];
     const hoverIndex = zones.findIndex((z) => z.layout.hover);
     if (hoverIndex === -1) {
-      let itemsIndex = items.findIndex((i) => ke(i) === ke(item));
-      if (itemsIndex === -1) {
-        items.push(item);
-        for (let z of zones) {
-          z.items = z.items?.filter((i: any) => ke(i) !== ke(item));
+      if (this.props.enableZoneItems) {
+        let itemsIndex = items.findIndex((i) => ke(i) === ke(item));
+        if (itemsIndex === -1) {
+          items.push(item);
+          for (let z of zones) {
+            z.items = z.items?.filter((i: any) => ke(i) !== ke(item));
+          }
         }
       }
     } else {
@@ -289,6 +292,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
       itemsInZoneNumCollumns,
       itemsNumCollumns,
       listZonesIdApplyMulti,
+      enableZoneItems = true,
     } = this.props;
     const { items, zones, dragging, itemsContainerLayout } = this.state;
     // if (this.state.changed) return <View style={style} />;
@@ -317,24 +321,28 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
         onLayout={(e) => this.onSetLayout(e)}
       >
         {headerComponent}
-        <ItemsContainer
-          itemsContainerStyle={itemsContainerStyle}
-          dragging={dragging}
-          itemKeyExtractor={itemKeyExtractor}
-          addedHeight={this.state.addedHeight || 0}
-          onGrant={(grant) => this.setState({ dragging: grant })}
-          renderItem={renderItem}
-          numCollumns={itemsNumCollumns}
-          itemsDisplay={itemsDisplay}
-          draggedElementStyle={draggedElementStyle}
-          changed={this.state.changed}
-          layout={itemsContainerLayout}
-          onLayout={(layout) => this.setState({ itemsContainerLayout: layout })}
-          onDragEnd={this.onDragEnd}
-          itemsContainerHeightFixed={itemsContainerHeightFixed}
-          onDrag={this.onDrag}
-          items={items}
-        />
+        {enableZoneItems && (
+          <ItemsContainer
+            itemsContainerStyle={itemsContainerStyle}
+            dragging={dragging}
+            itemKeyExtractor={itemKeyExtractor}
+            addedHeight={this.state.addedHeight || 0}
+            onGrant={(grant) => this.setState({ dragging: grant })}
+            renderItem={renderItem}
+            numCollumns={itemsNumCollumns}
+            itemsDisplay={itemsDisplay}
+            draggedElementStyle={draggedElementStyle}
+            changed={this.state.changed}
+            layout={itemsContainerLayout}
+            onLayout={(layout) =>
+              this.setState({ itemsContainerLayout: layout })
+            }
+            onDragEnd={this.onDragEnd}
+            itemsContainerHeightFixed={itemsContainerHeightFixed}
+            onDrag={this.onDrag}
+            items={items}
+          />
+        )}
         <ZonesContainer
           renderZone={renderZone}
           zones={zones}
