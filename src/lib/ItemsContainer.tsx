@@ -7,6 +7,7 @@ import Container, {
   LayoutProps,
 } from "./Container";
 import DragItem from "./DragItem";
+import _ from "lodash";
 
 interface ItemsContainerState extends ContainerState {
   layout: LayoutProps | null;
@@ -34,6 +35,7 @@ interface ItemsContainerProps extends ContainerProps {
   renderItem: (item: any, index: number) => ReactElement;
   itemsDisplay?: Display;
   numCollumns?: number;
+  zoneId?: number;
 }
 class ItemsContainer extends Container<
   ItemsContainerProps,
@@ -63,15 +65,20 @@ class ItemsContainer extends Container<
       items,
       itemsDisplay,
       numCollumns,
+      zoneId,
     } = this.props;
     const newItemsInZoneStyle: ViewStyle = {};
+    const newItemsInZoneStyle2: ViewStyle = {};
     const newStyle: ViewStyle = {};
+    const newStyle2: ViewStyle = {};
     if (dragging) {
       newStyle.zIndex = 10000;
     }
     if (itemsContainerHeightFixed) {
       newStyle.width = layout?.width;
       newStyle.height = layout?.height;
+      newStyle2.width = layout?.width;
+      newStyle2.height = layout?.height;
     }
     if (itemsDisplay === "row") {
       newStyle.flexDirection = "row";
@@ -82,32 +89,67 @@ class ItemsContainer extends Container<
         100 / (numCollumns || 1) - (numCollumns && numCollumns > 0 ? 1 : 0)
       }%`;
     }
+    const _itemsWithMulti = _.cloneDeep(items).filter((i) => i.multi == true);
+    const _itemsFull = _.cloneDeep(items).filter((i) => i.multi == false);
     return (
-      <View
-        onLayout={(e) => {
-          this.onSetLayout(e);
-        }}
-        style={[itemsContainerStyle, newStyle]}
-      >
-        {items.map((item, index) => {
-          const key = itemKeyExtractor(item);
-          return (
-            <DragItem
-              key={key}
-              onDrag={onDrag}
-              onGrant={onGrant}
-              changed={changed}
-              draggedElementStyle={draggedElementStyle}
-              addedHeight={addedHeight}
-              itemsInZoneStyle={{ ...itemsInZoneStyle, ...newItemsInZoneStyle }}
-              onDragEnd={onDragEnd}
-              item={item}
-              renderItem={renderItem}
-              tabIndex={index}
-            />
-          );
-        })}
-      </View>
+      <React.Fragment>
+        <View
+          onLayout={(e) => {
+            this.onSetLayout(e);
+          }}
+          style={[itemsContainerStyle, newStyle2]}
+        >
+          {_itemsFull.map((item, index) => {
+            const key = itemKeyExtractor(item);
+            return (
+              <DragItem
+                key={key}
+                onDrag={onDrag}
+                onGrant={onGrant}
+                changed={changed}
+                draggedElementStyle={draggedElementStyle}
+                addedHeight={addedHeight}
+                itemsInZoneStyle={{
+                  ...itemsInZoneStyle,
+                  ...newItemsInZoneStyle2,
+                }}
+                onDragEnd={onDragEnd}
+                item={item}
+                renderItem={renderItem}
+                tabIndex={index}
+              />
+            );
+          })}
+        </View>
+        <View
+          onLayout={(e) => {
+            this.onSetLayout(e);
+          }}
+          style={[itemsContainerStyle, newStyle]}
+        >
+          {_itemsWithMulti.map((item, index) => {
+            const key = itemKeyExtractor(item);
+            return (
+              <DragItem
+                key={key}
+                onDrag={onDrag}
+                onGrant={onGrant}
+                changed={changed}
+                draggedElementStyle={draggedElementStyle}
+                addedHeight={addedHeight}
+                itemsInZoneStyle={{
+                  ...itemsInZoneStyle,
+                  ...newItemsInZoneStyle,
+                }}
+                onDragEnd={onDragEnd}
+                item={item}
+                renderItem={renderItem}
+                tabIndex={index}
+              />
+            );
+          })}
+        </View>
+      </React.Fragment>
     );
   }
 }

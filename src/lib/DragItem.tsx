@@ -50,8 +50,14 @@ class DragItem extends Container<DragItemProps, DragItemState> {
       itemsInZoneStyle,
       draggedElementStyle,
     } = this.props;
-    const child = renderItem(item, tabIndex);
-    const newChild = React.cloneElement(child, {
+    let _child = null;
+    if(item.multi) {
+      _child = renderItem(item, tabIndex);
+    } else {
+      _child = renderItem(item, -1);
+    }
+    // const child = renderItem(item, tabIndex);
+    const newChild = React.cloneElement(_child, {
       style: {},
       ref: this.ref,
       onLayout: (e: LayoutChangeEvent) => this.onSetLayout(e),
@@ -64,7 +70,7 @@ class DragItem extends Container<DragItemProps, DragItemState> {
         draggedElementStyle={draggedElementStyle}
         addedHeight={addedHeight}
         style={{
-          ...child.props.style,
+          ..._child.props.style,
           ...itemsInZoneStyle,
         }}
         onDragEnd={() => onDragEnd(item)}

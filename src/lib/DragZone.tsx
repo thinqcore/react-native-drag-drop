@@ -88,6 +88,7 @@ class DragZOne extends Container<DragZOneProps, DragZOneState> {
         onDragEnd={onDragEnd}
         onDrag={(e, l, cb) => onDrag(e, l, cb, zoneId)}
         items={items}
+        zoneId={zoneId}
       />
     );
   };
