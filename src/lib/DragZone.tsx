@@ -43,6 +43,7 @@ interface DragZOneProps extends ContainerProps {
   numCollumns?: number;
   listZonesIdApplyMulti?: number[];
   propsInItems: TouchableOpacityProps;
+  func: (i?: any, cb?: (i?: any) => void) => void;
 }
 class DragZOne extends Container<DragZOneProps, DragZOneState> {
   ref = React.createRef<View>();
@@ -92,6 +93,7 @@ class DragZOne extends Container<DragZOneProps, DragZOneState> {
         items={items}
         zoneId={zoneId}
         propsInItems={this.props.propsInItems}
+        func={this.props.func}
       />
     );
   };

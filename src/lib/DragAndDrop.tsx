@@ -59,6 +59,7 @@ interface DragAndDropProps extends ContainerProps {
   listZonesIdApplyMulti?: number[];
   enableZoneItems?: boolean;
   propsInItems: TouchableOpacityProps;
+  func: (i?: any, cb?: (i?: any) => void) => void;
 }
 
 const PERCENT = 0.15;
@@ -369,6 +370,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
             onDrag={this.onDrag}
             items={items}
             propsInItems={propsInItems}
+            func={this.props.func}
           />
         )}
         <ZonesContainer
@@ -395,6 +397,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
           onDrag={this.onDrag}
           listZonesIdApplyMulti={listZonesIdApplyMulti}
           propsInItems={propsInItems}
+          func={this.props.func}
         />
         {footerComponent}
       </ScrollView>
