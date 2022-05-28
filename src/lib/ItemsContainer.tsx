@@ -1,5 +1,10 @@
 import React, { ReactElement } from "react";
-import { PanResponderGestureState, View, ViewStyle } from "react-native";
+import {
+  PanResponderGestureState,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
+} from "react-native";
 import Container, {
   ContainerProps,
   ContainerState,
@@ -36,6 +41,7 @@ interface ItemsContainerProps extends ContainerProps {
   itemsDisplay?: Display;
   numCollumns?: number;
   zoneId?: number;
+  propsInItems: TouchableOpacityProps;
 }
 class ItemsContainer extends Container<
   ItemsContainerProps,
@@ -66,6 +72,7 @@ class ItemsContainer extends Container<
       itemsDisplay,
       numCollumns,
       zoneId,
+      propsInItems,
     } = this.props;
     const newItemsInZoneStyle: ViewStyle = {};
     const newItemsInZoneStyle2: ViewStyle = {};
@@ -117,6 +124,7 @@ class ItemsContainer extends Container<
                 item={item}
                 renderItem={renderItem}
                 tabIndex={index}
+                propsInItems={propsInItems}
               />
             );
           })}
@@ -145,6 +153,7 @@ class ItemsContainer extends Container<
                 item={item}
                 renderItem={renderItem}
                 tabIndex={index}
+                propsInItems={propsInItems}
               />
             );
           })}

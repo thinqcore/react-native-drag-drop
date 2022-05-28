@@ -6,6 +6,7 @@ import {
   PanResponderGestureState,
   PanResponderInstance,
   TouchableOpacity,
+  TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
 import { LayoutProps } from "./Container";
@@ -30,6 +31,7 @@ export interface DraggableProps {
   onDragEnd: (gesture: PanResponderGestureState) => boolean;
   draggedElementStyle?: ViewStyle;
   style: ViewStyle;
+  propsInItems: TouchableOpacityProps;
 }
 class Draggable extends Component<DraggableProps, DraggableState> {
   state = {
@@ -113,6 +115,7 @@ class Draggable extends Component<DraggableProps, DraggableState> {
         <TouchableOpacity
           delayLongPress={200}
           onLongPress={() => this.setState({ pressed: true }, () => {})}
+          {...this.props.propsInItems}
         >
           {this.props.children}
         </TouchableOpacity>

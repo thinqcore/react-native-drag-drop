@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import {
   LayoutChangeEvent,
   PanResponderGestureState,
+  TouchableOpacityProps,
   View,
   ViewStyle,
 } from "react-native";
@@ -41,6 +42,7 @@ interface DragZOneProps extends ContainerProps {
   itemsDisplay?: Display;
   numCollumns?: number;
   listZonesIdApplyMulti?: number[];
+  propsInItems: TouchableOpacityProps;
 }
 class DragZOne extends Container<DragZOneProps, DragZOneState> {
   ref = React.createRef<View>();
@@ -89,6 +91,7 @@ class DragZOne extends Container<DragZOneProps, DragZOneState> {
         onDrag={(e, l, cb) => onDrag(e, l, cb, zoneId)}
         items={items}
         zoneId={zoneId}
+        propsInItems={this.props.propsInItems}
       />
     );
   };

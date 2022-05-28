@@ -1,5 +1,10 @@
 import React, { ReactElement } from "react";
-import { PanResponderGestureState, View, ViewStyle } from "react-native";
+import {
+  PanResponderGestureState,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
+} from "react-native";
 import Container, {
   ContainerProps,
   ContainerState,
@@ -37,6 +42,7 @@ interface ZonesContainerProps extends ContainerProps {
     hover?: boolean
   ) => ReactElement;
   listZonesIdApplyMulti?: number[];
+  propsInItems: TouchableOpacityProps;
 }
 class ZonesContainer extends Container<
   ZonesContainerProps,
@@ -62,6 +68,7 @@ class ZonesContainer extends Container<
       itemsDisplay,
       numCollumns,
       listZonesIdApplyMulti,
+      propsInItems,
     } = this.props;
     return (
       <View style={zonesContainerStyle}>
@@ -86,6 +93,7 @@ class ZonesContainer extends Container<
               onDrag={onDrag}
               renderZone={renderZone}
               listZonesIdApplyMulti={listZonesIdApplyMulti}
+              propsInItems={propsInItems}
             />
           );
         })}

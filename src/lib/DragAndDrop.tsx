@@ -1,5 +1,10 @@
 import React, { ReactElement } from "react";
-import { PanResponderGestureState, ScrollView, ViewStyle } from "react-native";
+import {
+  PanResponderGestureState,
+  ScrollView,
+  TouchableOpacityProps,
+  ViewStyle,
+} from "react-native";
 import Container, {
   ContainerProps,
   ContainerState,
@@ -53,6 +58,7 @@ interface DragAndDropProps extends ContainerProps {
   itemsInZoneNumCollumns?: number;
   listZonesIdApplyMulti?: number[];
   enableZoneItems?: boolean;
+  propsInItems: TouchableOpacityProps;
 }
 
 const PERCENT = 0.15;
@@ -313,6 +319,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
       itemsNumCollumns,
       listZonesIdApplyMulti,
       enableZoneItems = true,
+      propsInItems = {},
     } = this.props;
     const { items, zones, dragging, itemsContainerLayout } = this.state;
     // if (this.state.changed) return <View style={style} />;
@@ -361,6 +368,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
             itemsContainerHeightFixed={itemsContainerHeightFixed}
             onDrag={this.onDrag}
             items={items}
+            propsInItems={propsInItems}
           />
         )}
         <ZonesContainer
@@ -386,6 +394,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
           onDragEnd={this.onDragEnd}
           onDrag={this.onDrag}
           listZonesIdApplyMulti={listZonesIdApplyMulti}
+          propsInItems={propsInItems}
         />
         {footerComponent}
       </ScrollView>
