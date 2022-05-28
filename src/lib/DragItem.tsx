@@ -6,6 +6,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import _ from "lodash";
 import Container, {
   ContainerProps,
   ContainerState,
@@ -32,7 +33,8 @@ interface DragItemProps extends ContainerProps {
   item: any;
   renderItem: (item: any, index: number) => ReactElement;
   tabIndex: number;
-  propsInItems: TouchableOpacityProps;
+  propsInItems?: TouchableOpacityProps;
+  func: (i?: any, cb?: (i?: any) => void) => void;
 }
 class DragItem extends Container<DragItemProps, DragItemState> {
   state: DragItemState = {
@@ -78,6 +80,8 @@ class DragItem extends Container<DragItemProps, DragItemState> {
         }}
         onDragEnd={() => onDragEnd(item)}
         propsInItems={propsInItems}
+        item={item}
+        func={this.props.func}
       >
         {newChild}
       </Draggable>

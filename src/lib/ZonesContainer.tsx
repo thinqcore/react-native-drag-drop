@@ -42,7 +42,8 @@ interface ZonesContainerProps extends ContainerProps {
     hover?: boolean
   ) => ReactElement;
   listZonesIdApplyMulti?: number[];
-  propsInItems: TouchableOpacityProps;
+  propsInItems?: TouchableOpacityProps;
+  func: (i?: any, cb?: (i?: any) => void) => void;
 }
 class ZonesContainer extends Container<
   ZonesContainerProps,
@@ -94,6 +95,7 @@ class ZonesContainer extends Container<
               renderZone={renderZone}
               listZonesIdApplyMulti={listZonesIdApplyMulti}
               propsInItems={propsInItems}
+              func={this.props.func}
             />
           );
         })}

@@ -31,7 +31,9 @@ export interface DraggableProps {
   onDragEnd: (gesture: PanResponderGestureState) => boolean;
   draggedElementStyle?: ViewStyle;
   style: ViewStyle;
-  propsInItems: TouchableOpacityProps;
+  propsInItems?: TouchableOpacityProps;
+  item: any;
+  func: (i?: any, cb?: (i?: any) => void) => void;
 }
 class Draggable extends Component<DraggableProps, DraggableState> {
   state = {
@@ -98,7 +100,7 @@ class Draggable extends Component<DraggableProps, DraggableState> {
       transform: this.state.pan.getTranslateTransform(),
     };
 
-    let { draggedElementStyle, style } = this.props;
+    let { draggedElementStyle, style, func, item } = this.props;
     if (this.state.pressed) {
       style = { ...style, ...draggedElementStyle };
     }
@@ -115,6 +117,11 @@ class Draggable extends Component<DraggableProps, DraggableState> {
         <TouchableOpacity
           delayLongPress={200}
           onLongPress={() => this.setState({ pressed: true }, () => {})}
+          onPress={() => {
+            func &&
+              typeof func === "function" &&
+              func(item, this.props.propsInItems?.onPress);
+          }}
           {...this.props.propsInItems}
         >
           {this.props.children}
