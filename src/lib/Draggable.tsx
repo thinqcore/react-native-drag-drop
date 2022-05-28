@@ -31,7 +31,7 @@ export interface DraggableProps {
   onDragEnd: (gesture: PanResponderGestureState) => boolean;
   draggedElementStyle?: ViewStyle;
   style: ViewStyle;
-  propsInItems: TouchableOpacityProps;
+  propsInItems?: TouchableOpacityProps;
   item: any;
   func: (i?: any, cb?: (i?: any) => void) => void;
 }
@@ -120,7 +120,7 @@ class Draggable extends Component<DraggableProps, DraggableState> {
           onPress={() => {
             func &&
               typeof func === "function" &&
-              func(item, this.props.propsInItems.onPress);
+              func(item, this.props.propsInItems?.onPress);
           }}
           {...this.props.propsInItems}
         >

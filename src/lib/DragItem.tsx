@@ -33,7 +33,7 @@ interface DragItemProps extends ContainerProps {
   item: any;
   renderItem: (item: any, index: number) => ReactElement;
   tabIndex: number;
-  propsInItems: TouchableOpacityProps;
+  propsInItems?: TouchableOpacityProps;
   func: (i?: any, cb?: (i?: any) => void) => void;
 }
 class DragItem extends Container<DragItemProps, DragItemState> {

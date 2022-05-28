@@ -41,7 +41,7 @@ interface ItemsContainerProps extends ContainerProps {
   itemsDisplay?: Display;
   numCollumns?: number;
   zoneId?: number;
-  propsInItems: TouchableOpacityProps;
+  propsInItems?: TouchableOpacityProps;
   func: (i?: any, cb?: (i?: any) => void) => void;
 }
 class ItemsContainer extends Container<

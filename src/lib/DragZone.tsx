@@ -42,7 +42,7 @@ interface DragZOneProps extends ContainerProps {
   itemsDisplay?: Display;
   numCollumns?: number;
   listZonesIdApplyMulti?: number[];
-  propsInItems: TouchableOpacityProps;
+  propsInItems?: TouchableOpacityProps;
   func: (i?: any, cb?: (i?: any) => void) => void;
 }
 class DragZOne extends Container<DragZOneProps, DragZOneState> {

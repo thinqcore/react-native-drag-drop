@@ -58,7 +58,7 @@ interface DragAndDropProps extends ContainerProps {
   itemsInZoneNumCollumns?: number;
   listZonesIdApplyMulti?: number[];
   enableZoneItems?: boolean;
-  propsInItems: TouchableOpacityProps;
+  propsInItems?: TouchableOpacityProps;
   func: (i?: any, cb?: (i?: any) => void) => void;
 }
 

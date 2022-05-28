@@ -42,7 +42,7 @@ interface ZonesContainerProps extends ContainerProps {
     hover?: boolean
   ) => ReactElement;
   listZonesIdApplyMulti?: number[];
-  propsInItems: TouchableOpacityProps;
+  propsInItems?: TouchableOpacityProps;
   func: (i?: any, cb?: (i?: any) => void) => void;
 }
 class ZonesContainer extends Container<
