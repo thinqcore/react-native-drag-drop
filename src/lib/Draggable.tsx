@@ -10,11 +10,13 @@ import {
   ViewStyle,
 } from "react-native";
 import { LayoutProps } from "./Container";
+import { debounce } from "lodash";
 
 export interface DraggableState {
   pan: Animated.ValueXY;
   dragging: boolean;
   pressed: boolean;
+  count: number;
 }
 
 export interface DraggableProps {
@@ -40,6 +42,7 @@ class Draggable extends Component<DraggableProps, DraggableState> {
     pan: new Animated.ValueXY(),
     dragging: false,
     pressed: false,
+    count: 0,
   };
   panResponder?: PanResponderInstance;
   onResponderMove = (
@@ -94,6 +97,17 @@ class Draggable extends Component<DraggableProps, DraggableState> {
       onStartShouldSetPanResponderCapture: () => this.state.pressed,
     });
   }
+
+  onClickItem = () => {
+    let { func, item } = this.props;
+    const { count } = this.state;
+    this.setState({ count: count + 1 });
+    if (count === 1 && func && typeof func === "function") {
+      this.setState({ count: 0 });
+      func(item, this.props.propsInItems?.onPress);
+    }
+  };
+
   render() {
     const panStyle: ViewStyle = {
       //@ts-ignore
@@ -117,11 +131,7 @@ class Draggable extends Component<DraggableProps, DraggableState> {
         <TouchableOpacity
           delayLongPress={200}
           onLongPress={() => this.setState({ pressed: true }, () => {})}
-          onPress={() => {
-            func &&
-              typeof func === "function" &&
-              func(item, this.props.propsInItems?.onPress);
-          }}
+          onPress={this.onClickItem}
           {...this.props.propsInItems}
         >
           {this.props.children}
