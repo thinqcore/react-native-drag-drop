@@ -16,6 +16,7 @@ export interface DraggableState {
   pan: Animated.ValueXY;
   dragging: boolean;
   pressed: boolean;
+  count: number;
 }
 
 export interface DraggableProps {
@@ -41,6 +42,7 @@ class Draggable extends Component<DraggableProps, DraggableState> {
     pan: new Animated.ValueXY(),
     dragging: false,
     pressed: false,
+    count: 0,
   };
   panResponder?: PanResponderInstance;
   onResponderMove = (
@@ -96,13 +98,19 @@ class Draggable extends Component<DraggableProps, DraggableState> {
     });
   }
 
-  onClickItem = () =>
-    debounce(() => {
-      let { func, item } = this.props;
-      func &&
-        typeof func === "function" &&
+  onClickItem = () => {
+    let { func, item } = this.props;
+    const { count } = this.state;
+    this.setState({ count: count + 1 });
+    if (count === 1 && func && typeof func === "function") {
+      func(item, this.props.propsInItems?.onPress);
+    } else {
+      setTimeout(() => {
         func(item, this.props.propsInItems?.onPress);
-    }, 200);
+        this.setState({ count: 0 });
+      }, 200);
+    }
+  };
 
   render() {
     const panStyle: ViewStyle = {
