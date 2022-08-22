@@ -105,6 +105,11 @@ class Draggable extends Component<DraggableProps, DraggableState> {
     if (count === 1 && func && typeof func === "function") {
       this.setState({ count: 0 });
       func(item, this.props.propsInItems?.onPress);
+    } else {
+      setTimeout(() => {
+        this.setState({ count: 0 });
+      }, 100);
+      func(item, this.props.propsInItems?.onPress);
     }
   };
 
