@@ -1,4 +1,5 @@
 import React, { Component, ReactNode } from "react";
+import _ from "lodash";
 import {
   Animated,
   GestureResponderEvent,
@@ -113,6 +114,8 @@ class Draggable extends Component<DraggableProps, DraggableState> {
     }
   };
 
+  onPress = _.debounce(this.onClickItem, 300);
+
   render() {
     const panStyle: ViewStyle = {
       //@ts-ignore
@@ -136,7 +139,7 @@ class Draggable extends Component<DraggableProps, DraggableState> {
         <TouchableOpacity
           delayLongPress={200}
           onLongPress={() => this.setState({ pressed: true }, () => {})}
-          onPress={this.onClickItem}
+          onPress={this.onPress}
           {...this.props.propsInItems}
         >
           {this.props.children}
