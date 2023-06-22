@@ -1,16 +1,6 @@
 import React, { ReactElement } from "react";
-import {
-  PanResponderGestureState,
-  TouchableOpacityProps,
-  View,
-  ViewStyle,
-} from "react-native";
-import Container, {
-  ContainerProps,
-  ContainerState,
-  Display,
-  LayoutProps,
-} from "./Container";
+import { PanResponderGestureState, TouchableOpacityProps, View, ViewStyle } from "react-native";
+import Container, { ContainerProps, ContainerState, Display, LayoutProps } from "./Container";
 import DragItem from "./DragItem";
 import _ from "lodash";
 
@@ -19,12 +9,7 @@ interface ItemsContainerState extends ContainerState {
 }
 interface ItemsContainerProps extends ContainerProps {
   addedHeight: number;
-  onDrag: (
-    gestureState: PanResponderGestureState,
-    layout: LayoutProps | null,
-    cb: Function,
-    zoneId: any
-  ) => any;
+  onDrag: (gestureState: PanResponderGestureState, layout: LayoutProps | null, cb: Function, zoneId: any) => any;
   onGrant: (value: boolean) => any;
   onDragEnd: (gesture: PanResponderGestureState) => boolean;
   draggedElementStyle?: ViewStyle;
@@ -35,19 +20,18 @@ interface ItemsContainerProps extends ContainerProps {
   itemKeyExtractor: (item: any) => number | string;
   itemsInZoneStyle?: ViewStyle;
   itemsContainerStyle?: ViewStyle;
+  dragStyle?: ViewStyle;
   onLayout?: (layout: LayoutProps | null) => any;
   items: any[];
   renderItem: (item: any, index: number) => ReactElement;
+  renderDragItem?: () => ReactElement;
   itemsDisplay?: Display;
   numCollumns?: number;
   zoneId?: number;
   propsInItems?: TouchableOpacityProps;
   func: (i?: any, cb?: (i?: any) => void) => void;
 }
-class ItemsContainer extends Container<
-  ItemsContainerProps,
-  ItemsContainerState
-> {
+class ItemsContainer extends Container<ItemsContainerProps, ItemsContainerState> {
   ref = React.createRef<View>();
   onLayoutCallback = () => {
     if (this.props.onLayout) {
@@ -74,6 +58,8 @@ class ItemsContainer extends Container<
       numCollumns,
       zoneId,
       propsInItems,
+      renderDragItem,
+      dragStyle,
     } = this.props;
     const newItemsInZoneStyle: ViewStyle = {};
     const newItemsInZoneStyle2: ViewStyle = {};
@@ -93,9 +79,7 @@ class ItemsContainer extends Container<
       newStyle.alignItems = "center";
       newStyle.justifyContent = "space-between";
       newStyle.flexWrap = "wrap";
-      newItemsInZoneStyle.width = `${
-        100 / (numCollumns || 1) - (numCollumns && numCollumns > 0 ? 1 : 0)
-      }%`;
+      newItemsInZoneStyle.width = `${100 / (numCollumns || 1) - (numCollumns && numCollumns > 0 ? 1 : 0)}%`;
     }
     const _itemsWithMulti = _.cloneDeep(items).filter((i) => i.multi == true);
     const _itemsFull = _.cloneDeep(items).filter((i) => i.multi == false);
@@ -105,8 +89,7 @@ class ItemsContainer extends Container<
           onLayout={(e) => {
             this.onSetLayout(e);
           }}
-          style={[itemsContainerStyle, newStyle2]}
-        >
+          style={[itemsContainerStyle, newStyle2]}>
           {_itemsFull.map((item, index) => {
             const key = itemKeyExtractor(item);
             return (
@@ -124,6 +107,8 @@ class ItemsContainer extends Container<
                 onDragEnd={onDragEnd}
                 item={item}
                 renderItem={renderItem}
+                renderDragItem={renderDragItem}
+                dragStyle={dragStyle}
                 tabIndex={index}
                 propsInItems={propsInItems}
                 func={this.props.func}
@@ -135,8 +120,7 @@ class ItemsContainer extends Container<
           onLayout={(e) => {
             this.onSetLayout(e);
           }}
-          style={[itemsContainerStyle, newStyle]}
-        >
+          style={[itemsContainerStyle, newStyle]}>
           {_itemsWithMulti.map((item, index) => {
             const key = itemKeyExtractor(item);
             return (
@@ -154,6 +138,8 @@ class ItemsContainer extends Container<
                 onDragEnd={onDragEnd}
                 item={item}
                 renderItem={renderItem}
+                renderDragItem={renderDragItem}
+                dragStyle={dragStyle}
                 tabIndex={index}
                 propsInItems={propsInItems}
                 func={this.props.func}

@@ -1,17 +1,6 @@
 import React, { ReactElement } from "react";
-import {
-  LayoutChangeEvent,
-  PanResponderGestureState,
-  TouchableOpacityProps,
-  View,
-  ViewStyle,
-} from "react-native";
-import Container, {
-  ContainerProps,
-  ContainerState,
-  Display,
-  LayoutProps,
-} from "./Container";
+import { LayoutChangeEvent, PanResponderGestureState, TouchableOpacityProps, View, ViewStyle } from "react-native";
+import Container, { ContainerProps, ContainerState, Display, LayoutProps } from "./Container";
 import ItemsContainer from "./ItemsContainer";
 
 interface DragZOneState extends ContainerState {
@@ -19,26 +8,19 @@ interface DragZOneState extends ContainerState {
 }
 interface DragZOneProps extends ContainerProps {
   addedHeight: number;
-  onDrag: (
-    gestureState: PanResponderGestureState,
-    layout: LayoutProps | null,
-    cb: Function,
-    zoneId: any
-  ) => any;
+  onDrag: (gestureState: PanResponderGestureState, layout: LayoutProps | null, cb: Function, zoneId: any) => any;
   onGrant: (value: boolean) => any;
   onDragEnd: (gesture: PanResponderGestureState) => boolean;
   draggedElementStyle?: ViewStyle;
   itemKeyExtractor: (item: any) => number | string;
   itemsInZoneStyle?: ViewStyle;
+  dragStyle?: ViewStyle;
   zoneId: any;
   zone: any;
   onZoneLayoutChange: (zoneId: any, layout: LayoutProps) => any;
   renderItem: (item: any, index: number) => ReactElement;
-  renderZone: (
-    zone: any,
-    children?: ReactElement,
-    hover?: boolean
-  ) => ReactElement;
+  renderDragItem?: () => ReactElement;
+  renderZone: (zone: any, children?: ReactElement, hover?: boolean) => ReactElement;
   itemsDisplay?: Display;
   numCollumns?: number;
   listZonesIdApplyMulti?: number[];
@@ -51,27 +33,9 @@ class DragZOne extends Container<DragZOneProps, DragZOneState> {
     this.props.onZoneLayoutChange(this.props.zoneId, this.state.layout);
   };
   renderItems = (items: any): any => {
-    const {
-      renderItem,
-      itemKeyExtractor,
-      addedHeight,
-      onDrag,
-      itemsInZoneStyle,
-      draggedElementStyle,
-      onGrant,
-      onDragEnd,
-      changed,
-      zoneId,
-      itemsDisplay,
-      numCollumns,
-      listZonesIdApplyMulti,
-    } = this.props;
+    const { renderItem, itemKeyExtractor, addedHeight, onDrag, itemsInZoneStyle, draggedElementStyle, onGrant, onDragEnd, changed, zoneId, itemsDisplay, numCollumns, listZonesIdApplyMulti, renderDragItem, dragStyle } = this.props;
     let _itemsDisplay = itemsDisplay;
-    if (
-      listZonesIdApplyMulti &&
-      listZonesIdApplyMulti.length > 0 &&
-      !listZonesIdApplyMulti.includes(zoneId)
-    ) {
+    if (listZonesIdApplyMulti && listZonesIdApplyMulti.length > 0 && !listZonesIdApplyMulti.includes(zoneId)) {
       _itemsDisplay = "collumn";
     }
     if (!items || items.length === 0) return null;
@@ -88,6 +52,8 @@ class DragZOne extends Container<DragZOneProps, DragZOneState> {
         itemsInZoneStyle={itemsInZoneStyle}
         itemKeyExtractor={itemKeyExtractor}
         renderItem={renderItem}
+        renderDragItem={renderDragItem}
+        dragStyle={dragStyle}
         onDragEnd={onDragEnd}
         onDrag={(e, l, cb) => onDrag(e, l, cb, zoneId)}
         items={items}

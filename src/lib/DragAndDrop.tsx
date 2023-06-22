@@ -1,16 +1,6 @@
 import React, { ReactElement } from "react";
-import {
-  PanResponderGestureState,
-  ScrollView,
-  TouchableOpacityProps,
-  ViewStyle,
-} from "react-native";
-import Container, {
-  ContainerProps,
-  ContainerState,
-  Display,
-  LayoutProps,
-} from "./Container";
+import { PanResponderGestureState, ScrollView, TouchableOpacityProps, ViewStyle } from "react-native";
+import Container, { ContainerProps, ContainerState, Display, LayoutProps } from "./Container";
 import ItemsContainer from "./ItemsContainer";
 import ZonesContainer from "./ZonesContainer";
 import _ from "lodash";
@@ -45,13 +35,11 @@ interface DragAndDropProps extends ContainerProps {
   footerComponent?: ReactElement;
   itemsContainerHeightFixed?: boolean;
   renderItem: (item: any, index: number) => ReactElement;
+  renderDragItem?: () => ReactElement;
+  dragStyle?: ViewStyle;
   itemsContainerStyle?: ViewStyle;
   zonesContainerStyle?: ViewStyle;
-  renderZone: (
-    zone: any,
-    children?: ReactElement,
-    hover?: boolean
-  ) => ReactElement;
+  renderZone: (zone: any, children?: ReactElement, hover?: boolean) => ReactElement;
   itemsDisplay?: Display;
   itemsInZoneDisplay?: Display;
   itemsNumCollumns?: number;
@@ -87,10 +75,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
     if (nextProps.zones !== this.props.zones) {
       newState.zones = nextProps.zones;
       for (let zone of newState.zones) {
-        const finded = this.state.zones.find(
-          (z) =>
-            nextProps.zoneKeyExtractor(zone) === nextProps.zoneKeyExtractor(z)
-        );
+        const finded = this.state.zones.find((z) => nextProps.zoneKeyExtractor(zone) === nextProps.zoneKeyExtractor(z));
         if (finded) {
           zone.layout = finded.layout;
         }
@@ -105,12 +90,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
       });
     }
   }
-  onDrag = (
-    gesture: PanResponderGestureState,
-    layoutElement: LayoutProps | null,
-    cb: Function,
-    zoneId: any
-  ) => {
+  onDrag = (gesture: PanResponderGestureState, layoutElement: LayoutProps | null, cb: Function, zoneId: any) => {
     const cb2 = () => {
       setTimeout(() => {
         if (this.state.dragging) {
@@ -119,12 +99,10 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
         }
       }, 400);
     };
-    const HEIGHT =
-      (this.state.layout?.height || 0) - (layoutElement?.height || 0) * 0.5;
+    const HEIGHT = (this.state.layout?.height || 0) - (layoutElement?.height || 0) * 0.5;
     const { zoneKeyExtractor } = this.props;
     const x = gesture.moveX;
-    const y =
-      gesture.dy + (layoutElement?.y || 0) + (this.state.addedHeight || 0);
+    const y = gesture.dy + (layoutElement?.y || 0) + (this.state.addedHeight || 0);
     const div = gesture.moveY / (this.state.layout?.height || 0);
     if (div < 1 - PERCENT && div > PERCENT) {
       if (this.timeout) {
@@ -137,25 +115,16 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
         const div = gesture.moveY / (this.state.layout?.height || 0);
         let added = parseInt(String(HEIGHT * 0.5));
         if (div >= 1 - PERCENT) {
-          let rest: number =
-            (this.state.contentSize?.height || 0) -
-            this.state.scrollY -
-            (this.state.layout?.height || 0);
+          let rest: number = (this.state.contentSize?.height || 0) - this.state.scrollY - (this.state.layout?.height || 0);
           if (parseInt(String(rest)) >= 0) {
             if (rest <= added) {
-              this.setState(
-                { addedHeight: (this.state.addedHeight || 0) + rest },
-                cb2
-              );
+              this.setState({ addedHeight: (this.state.addedHeight || 0) + rest }, cb2);
               this.ref.current?.scrollTo({
                 animated: true,
                 y: this.state.scrollY + rest,
               });
             } else {
-              this.setState(
-                { addedHeight: (this.state.addedHeight || 0) + added },
-                cb2
-              );
+              this.setState({ addedHeight: (this.state.addedHeight || 0) + added }, cb2);
               this.ref.current?.scrollTo({
                 animated: true,
                 y: this.state.scrollY + added,
@@ -168,17 +137,13 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
             if (parseInt(String(rest)) <= 0) {
               this.setState(
                 {
-                  addedHeight:
-                    (this.state.addedHeight || 0) - this.state.scrollY,
+                  addedHeight: (this.state.addedHeight || 0) - this.state.scrollY,
                 },
                 cb2
               );
               this.ref.current?.scrollTo({ animated: true, y: 0 });
             } else {
-              this.setState(
-                { addedHeight: (this.state.addedHeight || 0) - added },
-                cb2
-              );
+              this.setState({ addedHeight: (this.state.addedHeight || 0) - added }, cb2);
               this.ref.current?.scrollTo({
                 animated: true,
 
@@ -198,18 +163,11 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
       }
       const { layout } = z;
       const offsetTop = layout.y - (layoutElement?.height || 0) * 0.3;
-      const offsetBottom =
-        layout.y + layout.height + (layoutElement?.height || 0) * 0.3;
+      const offsetBottom = layout.y + layout.height + (layoutElement?.height || 0) * 0.3;
       const offsetLeft = layout.x - (layoutElement?.width || 0) * 0.3;
-      const offsetRight =
-        layout.x + layout.width + (layoutElement?.width || 0) * 0.3;
+      const offsetRight = layout.x + layout.width + (layoutElement?.width || 0) * 0.3;
 
-      if (
-        offsetTop <= y &&
-        offsetBottom >= y &&
-        offsetLeft <= x &&
-        offsetRight >= x
-      ) {
+      if (offsetTop <= y && offsetBottom >= y && offsetLeft <= x && offsetRight >= x) {
         for (let z2 of zones) {
           if (z2 === z) {
             z.layout.hover = true;
@@ -254,9 +212,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
           if (!zone.items) {
             zone.items = [item];
           } else {
-            let itemIndex = zone?.items.findIndex(
-              (i: any) => ke(i) === ke(item)
-            );
+            let itemIndex = zone?.items.findIndex((i: any) => ke(i) === ke(item));
             if (itemIndex === -1) {
               if (maxItemsPerZone && maxItemsPerZone === zone.items.length) {
                 ok = false;
@@ -321,6 +277,8 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
       listZonesIdApplyMulti,
       enableZoneItems = true,
       propsInItems = {},
+      renderDragItem,
+      dragStyle,
     } = this.props;
     const { items, zones, dragging, itemsContainerLayout } = this.state;
     // if (this.state.changed) return <View style={style} />;
@@ -346,8 +304,7 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
         scrollEventThrottle={400}
         contentContainerStyle={[contentContainerStyle, otherStyle]}
         ref={this.ref}
-        onLayout={(e) => this.onSetLayout(e)}
-      >
+        onLayout={(e) => this.onSetLayout(e)}>
         {headerComponent}
         {enableZoneItems && (
           <ItemsContainer
@@ -357,14 +314,14 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
             addedHeight={this.state.addedHeight || 0}
             onGrant={(grant) => this.setState({ dragging: grant })}
             renderItem={renderItem}
+            renderDragItem={renderDragItem}
+            dragStyle={dragStyle}
             numCollumns={itemsNumCollumns}
             itemsDisplay={itemsDisplay}
             draggedElementStyle={draggedElementStyle}
             changed={this.state.changed}
             layout={itemsContainerLayout}
-            onLayout={(layout) =>
-              this.setState({ itemsContainerLayout: layout })
-            }
+            onLayout={(layout) => this.setState({ itemsContainerLayout: layout })}
             onDragEnd={this.onDragEnd}
             itemsContainerHeightFixed={itemsContainerHeightFixed}
             onDrag={this.onDrag}
@@ -393,6 +350,8 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
           zonesContainerStyle={zonesContainerStyle}
           itemKeyExtractor={itemKeyExtractor}
           renderItem={renderItem}
+          renderDragItem={renderDragItem}
+          dragStyle={dragStyle}
           onDragEnd={this.onDragEnd}
           onDrag={this.onDrag}
           listZonesIdApplyMulti={listZonesIdApplyMulti}

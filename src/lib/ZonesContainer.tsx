@@ -1,16 +1,6 @@
 import React, { ReactElement } from "react";
-import {
-  PanResponderGestureState,
-  TouchableOpacityProps,
-  View,
-  ViewStyle,
-} from "react-native";
-import Container, {
-  ContainerProps,
-  ContainerState,
-  Display,
-  LayoutProps,
-} from "./Container";
+import { PanResponderGestureState, TouchableOpacityProps, View, ViewStyle } from "react-native";
+import Container, { ContainerProps, ContainerState, Display, LayoutProps } from "./Container";
 import DragZOne from "./DragZone";
 
 interface ZonesContainerState extends ContainerState {
@@ -18,12 +8,7 @@ interface ZonesContainerState extends ContainerState {
 }
 interface ZonesContainerProps extends ContainerProps {
   addedHeight: number;
-  onDrag: (
-    gestureState: PanResponderGestureState,
-    layout: LayoutProps | null,
-    cb: Function,
-    zoneId: any
-  ) => any;
+  onDrag: (gestureState: PanResponderGestureState, layout: LayoutProps | null, cb: Function, zoneId: any) => any;
   onGrant: (value: boolean) => any;
   onDragEnd: (gesture: PanResponderGestureState) => boolean;
   draggedElementStyle?: ViewStyle;
@@ -32,23 +17,18 @@ interface ZonesContainerProps extends ContainerProps {
   itemsDisplay?: Display;
   numCollumns?: number;
   itemsInZoneStyle?: ViewStyle;
+  dragStyle?: ViewStyle;
   zonesContainerStyle?: ViewStyle;
   onZoneLayoutChange: (zoneId: any, layout: LayoutProps) => any;
   zones: any[];
   renderItem: (item: any, index: number) => ReactElement;
-  renderZone: (
-    zone: any,
-    children?: ReactElement,
-    hover?: boolean
-  ) => ReactElement;
+  renderDragItem?: () => ReactElement;
+  renderZone: (zone: any, children?: ReactElement, hover?: boolean) => ReactElement;
   listZonesIdApplyMulti?: number[];
   propsInItems?: TouchableOpacityProps;
   func: (i?: any, cb?: (i?: any) => void) => void;
 }
-class ZonesContainer extends Container<
-  ZonesContainerProps,
-  ZonesContainerState
-> {
+class ZonesContainer extends Container<ZonesContainerProps, ZonesContainerState> {
   ref = React.createRef<View>();
   render() {
     const {
@@ -70,6 +50,8 @@ class ZonesContainer extends Container<
       numCollumns,
       listZonesIdApplyMulti,
       propsInItems,
+      renderDragItem,
+      dragStyle,
     } = this.props;
     return (
       <View style={zonesContainerStyle}>
@@ -81,6 +63,8 @@ class ZonesContainer extends Container<
               zoneId={key}
               key={key}
               renderItem={renderItem}
+              renderDragItem={renderDragItem}
+              dragStyle={dragStyle}
               addedHeight={addedHeight}
               itemsDisplay={itemsDisplay}
               numCollumns={numCollumns}
