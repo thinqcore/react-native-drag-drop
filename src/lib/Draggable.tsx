@@ -119,7 +119,7 @@ class Draggable extends Component<DraggableProps, DraggableState> {
     }
 
     return (
-      <Animated.View {...this.panResponder?.panHandlers} style={[{ display: "flex", position: "relative", alignItems: "center", justifyContent: "space-between" }, panStyle, style]}>
+      <Animated.View {...this.panResponder?.panHandlers} style={[{ display: "flex", position: "relative" }, panStyle, style]}>
         {this.props.dragArea ? (
           <TouchableOpacity style={[this.props.dragStyle]} onPressIn={() => this.setState({ pressed: true }, () => {})} onPressOut={() => this.setState({ pressed: false }, () => {})}>
             {this.props.dragAreaChild}
