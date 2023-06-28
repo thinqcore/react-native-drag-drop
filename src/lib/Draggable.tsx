@@ -102,6 +102,11 @@ class Draggable extends Component<DraggableProps, DraggableState> {
 
   onPress = _.debounce(this.onClickItem, 300);
 
+  handleTouch = (val: boolean) => {
+    this.setState({ pressed: val }, () => {});
+    this.props.onGrant(val);
+  };
+
   render() {
     const panStyle: ViewStyle = {
       //@ts-ignore
@@ -119,13 +124,21 @@ class Draggable extends Component<DraggableProps, DraggableState> {
     }
 
     return (
-      <Animated.View {...this.panResponder?.panHandlers} style={[{ display: "flex", position: "relative" }, panStyle, style]}>
+      <Animated.View
+        onTouchStart={() => {
+          this.handleTouch(true);
+        }}
+        onTouchEnd={() => {
+          this.handleTouch(false);
+        }}
+        {...this.panResponder?.panHandlers}
+        style={[{ display: "flex", position: "relative" }, panStyle, style]}>
         {this.props.dragArea ? (
           <TouchableOpacity style={[this.props.dragStyle]} onPressIn={() => this.setState({ pressed: true }, () => {})} onPressOut={() => this.setState({ pressed: false }, () => {})}>
             {this.props.dragAreaChild}
           </TouchableOpacity>
         ) : null}
-        <TouchableOpacity style={{ flex: 1 }} delayLongPress={150} onLongPress={() => this.setState({ pressed: true }, () => {})} onPress={this.onPress} {...this.props.propsInItems}>
+        <TouchableOpacity style={{ flex: 1 }} onPress={this.onPress} {...this.props.propsInItems}>
           {this.props.children}
         </TouchableOpacity>
       </Animated.View>
