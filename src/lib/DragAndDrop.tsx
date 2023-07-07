@@ -301,6 +301,8 @@ class DragAndDrop extends Container<DragAndDropProps, DragAndDropState> {
           let y = e.nativeEvent.contentOffset.y;
           this.setState({ scrollY: y });
         }}
+        bounces={false}
+        overScrollMode="never"
         scrollEventThrottle={400}
         contentContainerStyle={[contentContainerStyle, otherStyle]}
         ref={this.ref}
